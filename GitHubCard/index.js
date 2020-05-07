@@ -4,18 +4,108 @@
     https://api.github.com/users/<your name>
 */
 
-/*
-  STEP 2: Inspect and study the data coming back, this is YOUR
-    github info! You will need to understand the structure of this
-    data in order to use it to build your component function
+// axios.get('https://api.github.com/users/iatechristmas')
+//   .then(response => {
+//     console.log(response)
+//   })
+//   .catch(error => {
+//     console.log('hi I am an error')
+//   })
+//   .finally(() => {
+//     console.log('done')
+//   })
+// /*
+//   STEP 2: Inspect and study the data coming back, this is YOUR
+//     github info! You will need to understand the structure of this
+//     data in order to use it to build your component function
 
-    Skip to STEP 3.
-*/
+//     Skip to STEP 3.
+// */
 
 /*
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
 */
+
+const followersArray = [
+  'iatechristmas',
+  'Vippsi',
+  'tjason-clegg',
+  'meep-morp',
+  'dannygipson95',
+  'songamugenzi'
+];
+
+const entryPoint = document.querySelector('.cards')
+
+cardMaker = (attrs) => {
+  const { avatar_url, name, login, location, html_url, followers, following, bio } = attrs
+
+  const card = document.createElement('div')
+  const cardImg = document.createElement('img')
+  const cardInfo = document.createElement('div')
+  const cardTitle = document.createElement('h3')
+  const cardUsername = document.createElement('p')
+  const cardLocation = document.createElement('p')
+  const cardProfile = document.createElement('p')
+  const cardFollowers = document.createElement('p')
+  const cardFollowing = document.createElement('p')
+  const cardBio = document.createElement('p')
+  const linkHtml = document.createElement('a')
+
+  card.appendChild(cardImg)
+  card.appendChild(cardInfo)
+  cardInfo.appendChild(cardTitle)
+  cardInfo.appendChild(cardUsername)
+  cardInfo.appendChild(cardLocation)
+  cardInfo.appendChild(cardProfile)
+
+  cardInfo.appendChild(cardFollowers)
+  cardInfo.appendChild(cardFollowing)
+  cardInfo.appendChild(cardBio)
+
+  card.classList.add('card')
+  cardInfo.classList.add('card-info')
+  cardTitle.classList.add('name')
+  cardUsername.classList.add('username')
+
+  cardImg.src = avatar_url
+  cardTitle.textContent = name
+  cardUsername.textContent = login
+  cardLocation.textContent = `Location: ${location}`
+  cardProfile.textContent = 'Profile: '
+  linkHtml.href = html_url
+  linkHtml.textContent = html_url
+  cardFollowers.textContent = `Followers: ${followers}`
+  cardFollowing.textContent = `Following: ${following}`
+  cardBio.textContent = `Bio: ${bio}`
+
+  cardProfile.appendChild(linkHtml)
+  return card
+}
+
+
+const getUser = (userName) => {
+  axios.get(`https://api.github.com/users/${userName}`)
+    .then(response => {
+      const user = cardMaker(response.data)
+      console.log(response.avatar_url)
+      entryPoint.appendChild(user)
+    })
+
+    .catch(error => {
+      console.log('Get user failed')
+    })
+  // .finally(() => {
+  //   console.log('done')
+  // })
+}
+
+// followersArray.forEach(follower => {
+//   return getUser(follower)
+// })
+
+getUser('iatechristmas')
 
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
@@ -27,8 +117,6 @@
     Using that array, iterate over it, requesting data for each user, creating a new card for each
     user, and adding that card to the DOM.
 */
-
-const followersArray = [];
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
